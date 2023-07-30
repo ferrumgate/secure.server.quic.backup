@@ -51,6 +51,7 @@
 #define FERRUM_ERR_UV -10000
 #define FERRUM_ERR -1000
 #define FERRUM_ERR_BAD_ARGUMENT -1001
+#define FERRUM_ERR_RESOLV -1002
 
 #define ferrum_kill_current_process(n) exit(n)
 /* @brief allocation methods */
@@ -134,8 +135,8 @@ typedef struct ferrum_clean_func {
 
   // free function
   public_ ferrum_clean_func_ptr_t func;
-  // ptr for free
-  public_ void *ptr;
+  // ptr list for free that endswith zero
+  public_ void **ptr;
   // any data for you
   union {
     int32_t source;

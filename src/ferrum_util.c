@@ -116,3 +116,15 @@ int32_t ferrum_util_file_read_allbytes(const char *file, char **buffer, size_t *
   *len = filelen;
   return FERRUM_SUCCESS;
 }
+
+int32_t ferrum_util_addr_to_ip_string(const ferrum_sockaddr_t *addr, char buffer[FERRUM_IP_STR_LEN]) {
+  if (addr->base.sa_family == AF_INET) {
+
+    uv_ip4_name(&addr->v4, buffer, 16);
+  }
+  if (addr->base.sa_family == AF_INET6) {
+
+    uv_ip6_name(&addr->v6, buffer, 45);
+  }
+  return FERRUM_SUCCESS;
+}

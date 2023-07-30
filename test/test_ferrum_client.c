@@ -34,11 +34,13 @@ static void test_ferrum_client_config() {
   ferrum_client_config_destroy(config);
 
   // valid input
-  char *argv1[] = {"test", "-h", "test", "-p", "12"};
+  char *argv1[] = {"test", "-h", "test", "-p", "12", "-l", "INFO", "-a", "tu"};
   result = ferrum_client_config_parse(5, argv1, &config);
   assert_int_equal(result, FERRUM_SUCCESS);
   assert_string_equal(config->host, "test");
   assert_string_equal(config->port, "12");
+  assert_string_equal(config->loglevel, "info");
+  assert_string_equal(config->alpn, "tu");
   ferrum_client_config_destroy(config);
 
   // invalid input

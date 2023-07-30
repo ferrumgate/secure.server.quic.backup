@@ -2,7 +2,7 @@
 
 ## For Testing
 
-start bind9 daemon with docker
+start bind9 daemon with docker and echo_server
 
 ```sh
     bash test/prepare.sh

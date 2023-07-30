@@ -104,7 +104,7 @@ static void ferrum_udp_socket_asserver_communication(void **start) {
   char *reply = "got it";
   ferrum_buf_t buf = {.buf = ferrum_cast_to_uint8ptr(reply), .len = strlen(reply) + 1};
   ferrum_new4(ferrum_clean_func_t, clean);
-  result = ferrum_udp_socket_write(server, &client, &buf, clean);
+  result = ferrum_udp_socket_write(server, &client, &buf, 1, clean);
   assert_int_equal(result, 0);
 
   // check for received data
@@ -204,7 +204,7 @@ static void test_ferrum_udp_socket_check_memory(void **state) {
     received_count = 0;
     ferrum_new4(ferrum_clean_func_t, clean);
     ferrum_buf_t buf = {.buf = ferrum_cast_to_uint8ptr(testdata), .len = datalen};
-    ferrum_udp_socket_write(dnsclient, &destination, &buf, clean);
+    ferrum_udp_socket_write(dnsclient, &destination, &buf, 1, clean);
     int counter = 10000;
     loop(counter, 10000, !sended_count);
 
@@ -273,7 +273,7 @@ static void test_ferrum_udp_socket_check_memory2(void **state) {
     received_count = 0;
     ferrum_new4(ferrum_clean_func_t, clean);
     ferrum_buf_t buf = {.buf = ferrum_cast_to_uint8ptr(testdata), .len = datalen};
-    ferrum_udp_socket_write(dnsclient, &destination, &buf, clean);
+    ferrum_udp_socket_write(dnsclient, &destination, &buf, 1, clean);
 
     int counter = 10000;
     loop(counter, 10000, !sended_count);

@@ -12,26 +12,26 @@ typedef void (*on_error_callback_t)(struct ferrum_udp_socket *socket, void *call
 typedef void (*on_close_callback_t)(struct ferrum_udp_socket *socket, void *callback_data);
 
 typedef struct ferrum_udp_socket_callback {
-  void *data;
-  on_close_callback_t on_close;
-  on_error_callback_t on_error;
-  on_write_callback_t on_write;
-  on_read_callback_t on_read;
+  private_ void *data;
+  private_ on_close_callback_t on_close;
+  private_ on_error_callback_t on_error;
+  private_ on_write_callback_t on_write;
+  private_ on_read_callback_t on_read;
 } ferrum_udp_socket_callback_t;
-
 typedef struct ferrum_udp_socket {
-  uv_udp_t handle;
-  on_close_callback_t on_close;
-  on_error_callback_t on_error;
-  on_write_callback_t on_write;
-  on_read_callback_t on_read;
-  void *callback_data;
-  int32_t is_connected;
+  private_ uv_udp_t handle;
+  private_ on_close_callback_t on_close;
+  private_ on_error_callback_t on_error;
+  private_ on_write_callback_t on_write;
+  private_ on_read_callback_t on_read;
+  private_ void *callback_data;
+  private_ int32_t is_connected;
+  private_ ferrum_sockaddr_t dest;
+  private_ ferrum_sockaddr_t local;
 } ferrum_udp_socket_t;
-
 typedef struct ferrum_buf {
-  uint8_t *buf;
-  size_t len;
+  public_ uint8_t *buf;
+  public_ size_t len;
 } ferrum_buf_t;
 
 int32_t ferrum_udp_socket_new(ferrum_udp_socket_t **socket, const ferrum_sockaddr_t *bind_addr);
@@ -39,7 +39,7 @@ int32_t ferrum_udp_socket_set_callbacks(ferrum_udp_socket_t *socket, const ferru
 int32_t ferrum_udp_socket_connect(ferrum_udp_socket_t *socket, const ferrum_sockaddr_t *addr);
 int32_t ferrum_udp_socket_start(ferrum_udp_socket_t *socket);
 int32_t ferrum_udp_socket_stop(ferrum_udp_socket_t *socket);
-int32_t ferrum_udp_socket_write(ferrum_udp_socket_t *socket, const ferrum_sockaddr_t *dst_addr, ferrum_buf_t *buffer, ferrum_clean_func_t *clean_func);
+int32_t ferrum_udp_socket_write(ferrum_udp_socket_t *socket, const ferrum_sockaddr_t *dst_addr, ferrum_buf_t buffers[], size_t buf_count, ferrum_clean_func_t *clean_func);
 int32_t ferrum_udp_socket_destroy(ferrum_udp_socket_t *socket);
 
 #endif

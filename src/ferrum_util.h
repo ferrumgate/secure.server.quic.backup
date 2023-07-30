@@ -23,4 +23,14 @@ int32_t ferrum_util_to_size_t(char *val, size_t *to);
 int32_t ferrum_util_ip_port_to_addr(const char *ip, const char *port, ferrum_sockaddr_t *sock);
 int32_t ferrum_util_addr_to_ferrum_addr(const struct sockaddr *addr, ferrum_sockaddr_t *sock);
 int32_t ferrum_util_file_read_allbytes(const char *file, char **buffer, size_t *len);
+/**
+ * @brief converts @see rebrick_sockaddr_t to ip string
+ *
+ * @param sock
+ * @param buffer
+ * @param len
+ * @return int32_t
+ */
+int32_t ferrum_util_addr_to_ip_string(const ferrum_sockaddr_t *addr, char buffer[FERRUM_IP_STR_LEN]);
+
 #endif

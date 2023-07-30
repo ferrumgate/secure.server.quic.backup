@@ -20,11 +20,20 @@
             ]
         },
         {
-            "name": "(gdb) Launch",
+            "name": "(gdb) Launch Client",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/src/ferrum.io",
-            "args": [],
+            "program": "${workspaceFolder}/src/secure.client.quic",
+            "args": [
+                "-h",
+                "127.0.0.1",
+                "-p",
+                "12345",
+                "-l",
+                "debug",
+                "-a",
+                "echo"
+            ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [
@@ -37,73 +46,13 @@
                     "value": "localhost:6379"
                 },
                 {
-                    "name": "RAW_DESTINATION_HOST",
-                    "value": "192.168.88.250"
-                },
-                {
-                    "name": "RAW_DESTINATION_TCP_PORT",
-                    "value": "5555"
-                },
-                {
-                    "name": "RAW_DESTINATION_UDP_PORT",
-                    "value": "5555"
-                },
-                {
-                    "name": "RAW_LISTEN_IP",
-                    "value": "192.168.88.250"
-                },
-                {
-                    "name": "RAW_LISTEN_TCP_PORT",
-                    "value": "5656"
-                },
-                {
-                    "name": "RAW_LISTEN_UDP_PORT",
-                    "value": "5656"
-                },
-                {
-                    "name": "GATEWAY_ID",
-                    "value": "gateway1"
-                },
-                {
-                    "name": "SERVICE_ID",
-                    "value": "mysqlservice"
-                },
-                {
-                    "name": "INSTANCE_ID",
-                    "value": "randominstance"
-                },
-                {
-                    "name": "DB_FOLDER",
-                    "value": "/tmp/dns"
-                },
-                {
-                    "name": "POLICY_DB_FOLDER",
-                    "value": "/tmp/dns2"
-                },
-                {
-                    "name": "SYSLOG_HOST",
-                    "value": "172.0.0.1:9292"
-                },
-                {
-                    "name": "DISABLE_POLICY",
-                    "value": "true"
-                },
-                {
-                    "name": "ROOT_FQDN",
-                    "value": "ferrumgate.zero"
-                },
-                {
-                    "name": "PROTOCOL_TYPE",
-                    "value": "dns"
-                },
-                {
                     "name": "LD_LIBRARY_PATH",
                     "value": "${workspaceFolder}/external/libs/lib"
                 }
             ],
             "additionalSOLibSearchPath": "${workspaceFolder}/external/libs/lib",
             "externalConsole": false,
-            "miDebuggerPath": "${workspaceFolder}/sudo.gdb.sh",
+            //"miDebuggerPath": "${workspaceFolder}/sudo.gdb.sh",
             "MIMode": "gdb",
             "preLaunchTask": "buildprod",
             "setupCommands": [

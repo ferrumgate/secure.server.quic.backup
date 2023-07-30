@@ -13,7 +13,10 @@ typedef enum {
   FERRUM_LOG_ALL = 6
 } log_level_t;
 
+#define FERRUM_LOG_LEVEL_STR 16
+
 void ferrum_log_level(log_level_t level);
+void ferrum_log_set_level_from_env();
 
 void ferrum_log_info2(const char *file, int32_t line, const char *fmt, ...);
 void ferrum_log_debug2(const char *file, int32_t line, const char *fmt, ...);

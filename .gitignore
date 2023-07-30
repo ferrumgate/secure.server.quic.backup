@@ -60,7 +60,7 @@ bind_data
 core-test-*
 node_modules/
 package-lock.json
-ferrum.io
+ferrum.client.io
 ferrum.io.test
 lock.mdb
 top1m.list

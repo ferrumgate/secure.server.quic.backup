@@ -1,18 +1,29 @@
 #include "ferrum_socket.h"
 
 int32_t ferrum_udp_socket_new(ferrum_udp_socket_t **sck, const ferrum_sockaddr_t *addr) {
+
   ferrum_new4(ferrum_udp_socket_t, socket);
 
   int32_t result = uv_udp_init_ex(uv_default_loop(), &socket->handle, UV_UDP_RECVMMSG);
   if (result < 0) {
     ferrum_log_fatal("socket failed:%s\n", uv_strerror(result));
+    ferrum_udp_socket_destroy(socket);
     return FERRUM_ERR_UV + result;
   }
   result = uv_udp_bind(&socket->handle, &addr->base, UV_UDP_REUSEADDR);
   if (result < 0) {
     ferrum_log_fatal("socket bind failed:%s\n", uv_strerror(result));
+    ferrum_udp_socket_destroy(socket);
+    return FERRUM_ERR_UV + result;
   }
   socket->handle.data = socket;
+  int32_t tmp = 0;
+  result = uv_udp_getsockname(&socket->handle, &socket->local.base, &tmp);
+  if (result < 0) {
+    ferrum_log_fatal("socket sockname failed:%s\n", uv_strerror(result));
+    ferrum_udp_socket_destroy(socket);
+    return FERRUM_ERR_UV + result;
+  }
   *sck = socket;
   return FERRUM_SUCCESS;
 }
@@ -32,6 +43,7 @@ int32_t ferrum_udp_socket_connect(ferrum_udp_socket_t *socket, const ferrum_sock
     ferrum_log_error("socket connect failed %s\n", uv_strerror(result));
     return FERRUM_ERR_UV + result;
   }
+  socket->dest = *addr;
   socket->is_connected = TRUE;
   return FERRUM_SUCCESS;
 }
@@ -108,34 +120,43 @@ static void on_send(uv_udp_send_t *req, int status) {
   }
 
   if (clean_func) {
-    if (clean_func->func) {
-      clean_func->func(clean_func->ptr);
+    if (clean_func->func && clean_func->ptr) {
+      void **start = clean_func->ptr;
+      while (*start) {
+        clean_func->func(*start);
+        start++;
+      }
     }
     ferrum_free(clean_func);
   }
   ferrum_free(req);
 }
 
-int32_t ferrum_udp_socket_write(ferrum_udp_socket_t *socket, const ferrum_sockaddr_t *dst_addr, ferrum_buf_t *buffer, ferrum_clean_func_t *clean_func) {
+int32_t ferrum_udp_socket_write(ferrum_udp_socket_t *socket, const ferrum_sockaddr_t *dst_addr, ferrum_buf_t buffers[], size_t buffers_count, ferrum_clean_func_t *clean_func) {
 
   int32_t result;
   if (uv_is_closing(ferrum_cast(&socket->handle, uv_handle_t *))) {
     return FERRUM_ERR;
   }
   ferrum_new4(uv_udp_send_t, request);
-  uv_buf_t buf = uv_buf_init(ferrum_cast(buffer->buf, char *), buffer->len);
+  uv_buf_t *bufs = ferrum_malloc(sizeof(uv_buf_t) * (buffers_count));
+  for (size_t i = 0; i < buffers_count; ++i) {
+    bufs[i] = uv_buf_init(ferrum_cast(buffers[i].buf, char *), buffers[i].len);
+  }
   request->data = clean_func;
 
-  result = uv_udp_send(request, &socket->handle, &buf, 1, socket->is_connected ? NULL : &dst_addr->base, on_send);
+  result = uv_udp_send(request, &socket->handle, bufs, buffers_count, socket->is_connected ? NULL : &dst_addr->base, on_send);
 
   if (result < 0) {
 
     ferrum_log_info("sending data to server failed\n");
+    ferrum_free(bufs);
     ferrum_free(request->data);
     ferrum_free(request);
     return FERRUM_ERR_UV + result;
   }
-  ferrum_log_debug("data sended len:%zu to server\n", buffer->len);
+  ferrum_free(bufs);
+  ferrum_log_debug("data sended len:%zu to server\n", buffers[0].len);
   return FERRUM_SUCCESS;
 }
 
