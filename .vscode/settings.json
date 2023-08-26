@@ -1,0 +1,33 @@
+{
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "googletest.failed",
+                "settings": {
+                    "foreground": "#f00"
+                }
+            },
+            {
+                "scope": "googletest.passed",
+                "settings": {
+                    "foreground": "#0f0"
+                }
+            },
+            {
+                "scope": "googletest.run",
+                "settings": {
+                    "foreground": "#0f0"
+                }
+            }
+        ]
+    },
+    "C_Cpp.default.intelliSenseMode": "linux-clang-x64",
+    "C_Cpp.default.cStandard": "gnu17",
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "unistd.h": "c",
+        "ferrum_util.h": "c",
+        "udpecho.h": "c"
+    },
+    "cmake.sourceDirectory": "/work/projects/ferrum/secure.server.quic/external/boringssl"
+}
